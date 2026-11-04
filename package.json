@@ -1,0 +1,13 @@
+{
+  "name": "shoresh-ordering-platform",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm --prefix apps/api run start:dev\" \"npm --prefix apps/web run dev\"",
+    "build": "npm --prefix apps/web run build && npm --prefix apps/api run build",
+    "dev:web": "npm --prefix apps/web run dev",
+    "dev:api": "npm --prefix apps/api run start:dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
