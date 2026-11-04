@@ -22,6 +22,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - uses: actions/configure-pages@v5
+        with:
+          # turns Pages on for the repo so it need not be enabled by hand first
+          enablement: true
       - run: npm ci
         working-directory: apps/web
       - run: npm run build
@@ -29,7 +33,6 @@ jobs:
         env:
           # must match the repository name, since Pages serves from /grill-maghar/
           VITE_BASE: /grill-maghar/
-      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: apps/web/dist
