@@ -2,6 +2,9 @@
   "name": "shoresh-api",
   "private": true,
   "version": "1.0.0",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start:dev": "nest start --watch",
     "build": "nest build",

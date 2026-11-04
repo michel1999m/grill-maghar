@@ -7,6 +7,7 @@ async function bootstrap() {
   app.enableCors();
   // uploaded dish photos arrive as base64 inside the JSON body; the 100kb default is too small
   app.useBodyParser("json", { limit: "5mb" });
-  await app.listen(process.env.PORT || 3000);
+  // hosts route traffic in from outside the container, so bind every interface
+  await app.listen(Number(process.env.PORT) || 3000, "0.0.0.0");
 }
 bootstrap();

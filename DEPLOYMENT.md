@@ -32,12 +32,25 @@
 Vercel → Settings → Domains → מוסיפים `grill-maghar.com` ו-`www.grill-maghar.com`, ומעדכנים DNS אצל רשם הדומיין לפי ההוראות שVercel מציג (בד"כ רשומת A ל-`76.76.21.21` ו-CNAME ל-`www`).
 
 ## 3. אחסון ה-API (Backend — apps/api)
-מומלץ **Railway** או **Render** (יש להם תוכנית חינמית/זולה עם תמיכה ב-WebSocket, בניגוד לרוב פלטפורמות ה-serverless):
+**זה השלב שמסיר את ההודעה "התצוגה הזו מראה את התפריט בלבד".** בלי שרת אין איפה לשמור הזמנות ושינויי תפריט.
+
+מומלץ **Railway** או **Render** (תומכים ב-WebSocket, בניגוד לרוב פלטפורמות ה-serverless — ולכן *לא* Vercel לחלק הזה):
 1. חברו את הריפו, הגדירו Root Directory ל-`apps/api`.
 2. Build command: `npm install && npm run build` | Start command: `npm run start`.
 3. משתני סביבה נדרשים:
-   - `PORT` (בד"כ מוגדר אוטומטית ע"י הפלטפורמה)
-   - `ADMIN_KEY` — מפתח ניהול חזק (לא `dev-admin-key`!)
+   - `PORT` — מוגדר אוטומטית ע"י הפלטפורמה, לא נוגעים.
+   - `ADMIN_KEY` — מפתח ניהול חזק (לא `dev-admin-key`!). זה הקוד שתזינו במסך הניהול.
+4. מעתיקים את כתובת השרת שהתקבלה (למשל `https://grill-maghar-api.up.railway.app`).
+5. ב-Vercel → Settings → Environment Variables מוסיפים `VITE_API_URL` עם הכתובת הזו → **Redeploy**.
+
+אם הבנייה נכשלת עם `nest: not found`, הפלטפורמה דילגה על devDependencies — שנו את ה-Build command ל-`npm install --include=dev && npm run build`.
+
+### ⚠️ אזהרה חשובה: הנתונים נמחקים בכל דיפלוי
+כרגע אין בסיס נתונים:
+- **הזמנות** נשמרות בזיכרון בלבד — כל restart של השרת מוחק אותן.
+- **תפריט והגדרות** נשמרים לקבצים ב-`apps/api/data/`, אבל הדיסק של Railway/Render הוא ephemeral — כל דיפלוי מחדש מוחק אותם וחוזר לתפריט ברירת המחדל.
+
+כלומר: תוסיפו מנות, ואחרי הדיפלוי הבא הן ייעלמו. **לפני שמתחילים לקבל הזמנות אמיתיות חובה לחבר PostgreSQL** (ב-Railway זה תוספת של כמה קליקים) ולהחליף את אחסון הקבצים/זיכרון.
 4. עדכנו את `VITE_API_URL` בפרויקט ה-Vercel לכתובת ה-API שקיבלתם (למשל `https://grill-maghar-api.up.railway.app`), ואם תרצו כתובת מסודרת אפשר לחבר תת-דומיין כמו `api.grill-maghar.com`.
 
 ## 4. הנגשה לטלפונים ("איך לקוחות ניגשים מהנייד?")
