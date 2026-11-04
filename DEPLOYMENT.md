@@ -7,31 +7,29 @@
 2. חפשו `grill-maghar.com` ורכשו אותו (בד"כ 30-50 ₪ לשנה).
 3. הפעילו WHOIS Privacy (חינם ברוב הרשמים) כדי להסתיר פרטים אישיים.
 
-## 1א. GitHub Pages — כתובת חינמית לתפריט בלבד
-בריפו כבר יש workflow (`.github/workflows/deploy-pages.yml`) שבונה את התפריט ומעלה אותו ל-GitHub Pages בכל push ל-main.
+## 2. אחסון האתר (Frontend — apps/web) — Vercel
+חינמי, HTTPS אוטומטי, ומקבלים כתובת נקייה בלי שם המשתמש: `https://grill-maghar.vercel.app`
 
-**הפעלה חד-פעמית:** Settings → Pages → Source = **GitHub Actions**. בלי זה הריצה נכשלת, כי ה-workflow לא מורשה להפעיל Pages בעצמו.
+### העלאה ראשונה (כתובת חינמית, בלי לקנות דומיין)
+1. נכנסים ל-vercel.com → **Sign in with GitHub**.
+2. **Add New → Project** → בוחרים את הריפו `grill-maghar` → **Import**.
+3. **Project Name**: `grill-maghar` ← זה מה שקובע את הכתובת הסופית.
+4. **Root Directory**: לוחצים Edit ובוחרים `apps/web` ← קריטי, אחרת הבנייה תיכשל כי זה monorepo.
+5. Framework מזוהה אוטומטית כ-Vite. **Deploy**.
 
-הכתובת שתתקבל: `https://michel1999m.github.io/grill-maghar/`
+כל push ל-main יעלה גרסה חדשה אוטומטית.
 
-**מה עובד שם ומה לא:** Pages מגיש קבצים סטטיים בלבד ולא יכול להריץ את שרת ה-NestJS. לכן זו תצוגת תפריט בלבד:
+**מה עובד בשלב הזה ומה לא:** בלי שרת (שלב 3) האתר רץ כתצוגת תפריט בלבד:
 - ✅ תפריט, הרכבת מנה, סל וחישוב מחירים כולל דמי משלוח.
-- ❌ הזמנות לא מגיעות למטבח, שינויי תפריט/מחירים לא נשמרים ולא משותפים בין מבקרים, ואין עדכונים בזמן אמת.
+- ❌ הזמנות לא מגיעות למטבח, ושינויי תפריט/מחירים לא נשמרים ולא משותפים בין מבקרים.
 
-האפליקציה מזהה שאין שרת ומציגה הודעה מתאימה במקום להיראות שבורה. להזמנות אמיתיות צריך גם את השרת (שלבים 2-3).
+האפליקציה מזהה שאין שרת ומציגה הודעה מתאימה במקום להיראות שבורה.
 
-### לחבר את grill-maghar.com ל-Pages (אם לא רוצים Vercel)
-1. Settings → Pages → Custom domain → `grill-maghar.com`.
-2. אצל רשם הדומיין מגדירים 4 רשומות A ל-`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`, ו-CNAME ל-`www` שמצביע ל-`michel1999m.github.io`.
-3. מסמנים Enforce HTTPS.
-4. בקובץ ה-workflow משנים `VITE_BASE` מ-`/grill-maghar/` ל-`/`, כי דומיין מותאם מגיש מהשורש.
+### אחרי שמעלים גם את השרת (שלב 3)
+ב-Vercel → Settings → Environment Variables מוסיפים `VITE_API_URL` עם כתובת ה-API, ועושים Redeploy. מהרגע הזה ההזמנות מגיעות למטבח והניהול נשמר.
 
-## 2. אחסון האתר (Frontend — apps/web)
-מומלץ **Vercel** (חינמי ל-MVP, פשוט, HTTPS אוטומטי):
-1. `git init` בתיקיית הפרויקט אם עוד לא בוצע, ודחפו ל-GitHub.
-2. בכנסו ל-vercel.com → Import Project → בחרו את הריפו, הגדירו Root Directory ל-`apps/web`.
-3. הוסיפו משתנה סביבה `VITE_API_URL` עם כתובת ה-API שיפרס (שלב 3).
-4. אחרי הדיפלוי הראשון: Vercel → Domains → הוסיפו `grill-maghar.com` ו-`www.grill-maghar.com`, ועדכנו את רשומות ה-DNS אצל רשם הדומיין לפי ההוראות שVercel מציג (בד"כ רשומת A ל-`76.76.21.21` ו-CNAME ל-`www`).
+### לחבר את הדומיין grill-maghar.com (אופציונלי, בתשלום)
+Vercel → Settings → Domains → מוסיפים `grill-maghar.com` ו-`www.grill-maghar.com`, ומעדכנים DNS אצל רשם הדומיין לפי ההוראות שVercel מציג (בד"כ רשומת A ל-`76.76.21.21` ו-CNAME ל-`www`).
 
 ## 3. אחסון ה-API (Backend — apps/api)
 מומלץ **Railway** או **Render** (יש להם תוכנית חינמית/זולה עם תמיכה ב-WebSocket, בניגוד לרוב פלטפורמות ה-serverless):
