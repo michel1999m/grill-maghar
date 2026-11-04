@@ -22,10 +22,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      # Needs Pages already switched on: Settings > Pages > Source = GitHub Actions.
+      # The workflow token is not allowed to create the Pages site itself.
       - uses: actions/configure-pages@v5
-        with:
-          # turns Pages on for the repo so it need not be enabled by hand first
-          enablement: true
       - run: npm ci
         working-directory: apps/web
       - run: npm run build
